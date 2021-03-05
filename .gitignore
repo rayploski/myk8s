@@ -1,0 +1,43 @@
+.cr-release-packages
+.terraform
+.terraform.lock.hcl
+
+# Compiled Files
+*.tfstate
+*.tfstate.*
+
+# State file in any sub-folder
+**/terraform.tfstate
+**/terraform.tfstate.backup
+*.tfstate.lock.info
+
+# Terraform Variables
+*.tfvars
+
+# Ignored Terraform files
+*gitignore*.tf
+
+# SSH Keys
+*.pem
+
+.DS_Store
+# Common VCS dirs
+.git/
+.gitignore
+.bzr/
+.bzrignore
+.hg/
+.hgignore
+.svn/
+# Common backup files
+*.swp
+*.bak
+*.tmp
+*.backup
+*~
+# Various IDEs
+.project
+.idea/
+*.tmproj
+.vscode/
+*.code-workspace
