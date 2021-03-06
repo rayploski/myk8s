@@ -33,7 +33,7 @@ resource "kubernetes_persistent_volume" "jenkins_pv" {
                   match_expressions {
                       key = "kubernetes.io/hostname"
                       operator = "In"
-                      values = ["mars"]
+                      values = ["jupiter"]
                   }
               }
           }

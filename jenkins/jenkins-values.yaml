@@ -99,9 +99,11 @@ controller:
   targetPort: 8080
   # For minikube, set this to NodePort, elsewhere use LoadBalancer
   # Use ClusterIP if your setup includes ingress controller
-  serviceType: ClusterIP
+  serviceType: LoadBalancer
   # Jenkins controller service annotations
-  serviceAnnotations: {}
+  serviceAnnotations: {
+        metallb.universe.tf/address-pool: address-pool-1
+  }
   # Jenkins controller custom labels
   statefulSetLabels: {}
   #   foo: bar
@@ -160,7 +162,9 @@ controller:
   # Optionally assign an IP to the LoadBalancer agentListenerService LoadBalancer
   # GKE users: only regional static IPs will work for Service Load balancer.
   agentListenerLoadBalancerIP:
-  agentListenerServiceAnnotations: {}
+  agentListenerServiceAnnotations: {
+        metallb.universe.tf/address-pool: address-pool-1
+  }
 
   # Example of 'LoadBalancer' type of agent listener with annotations securing it
   # agentListenerServiceType: LoadBalancer
