@@ -30,27 +30,27 @@ resource "kubernetes_persistent_volume" "vault_data_pv" {
     name = "data-vault"
   }
   spec {
-      capacity = {
-          storage = "10Gi"
+    capacity = {
+      storage = "10Gi"
+    }
+    access_modes       = ["ReadWriteOnce"]
+    storage_class_name = "vault-storage"
+    persistent_volume_source {
+      local {
+        path = "/data/k8s-pv/vault/data"
       }
-      access_modes = ["ReadWriteOnce"]
-      storage_class_name = "vault-storage"
-      persistent_volume_source {
-          local {
-              path = "/data/k8s-pv/vault/data"
+    }
+    node_affinity {
+      required {
+        node_selector_term {
+          match_expressions {
+            key      = "kubernetes.io/hostname"
+            operator = "In"
+            values   = ["jupiter"]
           }
+        }
       }
-      node_affinity {
-          required {
-              node_selector_term {
-                  match_expressions {
-                      key = "kubernetes.io/hostname"
-                      operator = "In"
-                      values = ["jupiter"]
-                  }
-              }
-          }
-      }
+    }
   }
 
 }
@@ -61,27 +61,27 @@ resource "kubernetes_persistent_volume" "vault_audit_pv" {
     name = "data-audit"
   }
   spec {
-      capacity = {
-          storage = "10Gi"
+    capacity = {
+      storage = "10Gi"
+    }
+    access_modes       = ["ReadWriteOnce"]
+    storage_class_name = "vault-storage"
+    persistent_volume_source {
+      local {
+        path = "/data/k8s-pv/vault/audit"
       }
-      access_modes = ["ReadWriteOnce"]
-      storage_class_name = "vault-storage"
-      persistent_volume_source {
-          local {
-              path = "/data/k8s-pv/vault/audit"
+    }
+    node_affinity {
+      required {
+        node_selector_term {
+          match_expressions {
+            key      = "kubernetes.io/hostname"
+            operator = "In"
+            values   = ["jupiter"]
           }
+        }
       }
-      node_affinity {
-          required {
-              node_selector_term {
-                  match_expressions {
-                      key = "kubernetes.io/hostname"
-                      operator = "In"
-                      values = ["jupiter"]
-                  }
-              }
-          }
-      }
+    }
   }
 
 }
@@ -93,14 +93,14 @@ resource "kubernetes_persistent_volume" "vault_audit_pv" {
 * helm search repo vault --versions 
 */
 resource "helm_release" "vault_consul_helm" {
-    name = "consul"
-    chart = "hashicorp/consul"
-    namespace = "vault"
-    values = [
-      "${file("consul-values.yaml")}"
-    ]
+  name      = "consul"
+  chart     = "hashicorp/consul"
+  namespace = "vault"
+  values = [
+    "${file("consul-values.yaml")}"
+  ]
 
-} 
+}
 
 
 /* To install vault you will need add the HashiCorp vault repo 
@@ -111,12 +111,12 @@ resource "helm_release" "vault_consul_helm" {
 */
 
 resource "helm_release" "vault_helm" {
-    name = "vault"
-    chart = "hashicorp/vault"
-    namespace = "vault"
-    values = [
-      "${file("vault-values.yaml")}"
-    ]
-    depends_on = [ helm_release.vault_consul_helm, ]    
-} 
+  name      = "vault"
+  chart     = "hashicorp/vault"
+  namespace = "vault"
+  values = [
+    "${file("vault-values.yaml")}"
+  ]
+  depends_on = [helm_release.vault_consul_helm, ]
+}
 

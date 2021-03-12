@@ -12,125 +12,125 @@ and our jobs when we reboot our node.
 resource "kubernetes_persistent_volume" "jenkins_pv" {
   metadata {
     name = "jenkins-pv"
-    labels  = {
-        type = "local"
+    labels = {
+      type = "local"
     }
   }
   spec {
-      capacity = {
-          storage = "50Gi"
+    capacity = {
+      storage = "50Gi"
+    }
+    access_modes       = ["ReadWriteOnce"]
+    storage_class_name = "local-storage"
+    persistent_volume_source {
+      local {
+        path = "/data/k8s-pv/jenkins"
       }
-      access_modes = ["ReadWriteOnce"]
-      storage_class_name = "local-storage"
-      persistent_volume_source {
-          local {
-              path = "/data/k8s-pv/jenkins"
+    }
+    node_affinity {
+      required {
+        node_selector_term {
+          match_expressions {
+            key      = "kubernetes.io/hostname"
+            operator = "In"
+            values   = ["jupiter"]
           }
+        }
       }
-      node_affinity {
-          required {
-              node_selector_term {
-                  match_expressions {
-                      key = "kubernetes.io/hostname"
-                      operator = "In"
-                      values = ["jupiter"]
-                  }
-              }
-          }
-      }
+    }
   }
 }
 
 resource "kubernetes_persistent_volume_claim" "jenkins_pvc" {
-    metadata {
-        name = "jenkins-pvc"
-        namespace = "jenkins"
-        labels  = {
-            type = "local"
-        }
+  metadata {
+    name      = "jenkins-pvc"
+    namespace = "jenkins"
+    labels = {
+      type = "local"
     }
-    spec {
-      access_modes = ["ReadWriteOnce"]
-      resources {
-          requests = {
-              storage = "48Gi"
-          }
+  }
+  spec {
+    access_modes = ["ReadWriteOnce"]
+    resources {
+      requests = {
+        storage = "48Gi"
       }
-      storage_class_name = "local-storage"
-      volume_name = "${kubernetes_persistent_volume.jenkins_pv.metadata.0.name}"
     }
+    storage_class_name = "local-storage"
+    volume_name        = kubernetes_persistent_volume.jenkins_pv.metadata.0.name
+  }
 }
 
 resource "kubernetes_service_account" "jenkins_sa" {
-     metadata {
-        name = "jenkins"
-        namespace = "jenkins"
-     }
+  metadata {
+    name      = "jenkins"
+    namespace = "jenkins"
+  }
 }
 
 
 /* Create a ClusterRole for Jenkins */
 resource "kubernetes_cluster_role" "jenkins_cr" {
-    metadata {
-        name = "jenkins"  
-        annotations = {
-            "rbac.authorization.kubernetes.io/autoupdate" = "true"
-        }
-        labels = {
-            "kubernetes.io/bootstrapping" = "rbac-defaults"
-        }
+  metadata {
+    name = "jenkins"
+    annotations = {
+      "rbac.authorization.kubernetes.io/autoupdate" = "true"
     }
-    
-    /* Give Jenkins a very large swath of privileges within the jenkins namespace */
-    rule {
-        api_groups  = ["*"]
-        resources   = [
-            "configmaps",
-            "cronjobs",
-            "daemonsets",
-            "deployments",
-            "deployments/scale",
-            "endpoints",
-            "events",
-            "jobs",
-            "namespaces",
-            "persistentvolumes",
-            "persistentvolumeclaims",
-            "poddisruptionbudget",
-            "podtemplates",
-            "pods",
-            "pods/exec",
-            "pods/log",
-            "podsecuritypolicies",
-            "podsreset",  
-            "replicasets",
-            "replicationcontrollers",
-            "secrets",
-            "services", 
-            "statefulsets"            
-        ]
+    labels = {
+      "kubernetes.io/bootstrapping" = "rbac-defaults"
+    }
+  }
 
-        verbs       = [
-            "create",
-            "get", 
-            "watch", 
-            "delete", 
-            "list", 
-            "patch", 
-            "update"
-        ]
-    }
+  /* Give Jenkins a very large swath of privileges within the jenkins namespace */
+  rule {
+    api_groups = ["*"]
+    resources = [
+      "configmaps",
+      "cronjobs",
+      "daemonsets",
+      "deployments",
+      "deployments/scale",
+      "endpoints",
+      "events",
+      "jobs",
+      "namespaces",
+      "persistentvolumes",
+      "persistentvolumeclaims",
+      "poddisruptionbudget",
+      "podtemplates",
+      "pods",
+      "pods/exec",
+      "pods/log",
+      "podsecuritypolicies",
+      "podsreset",
+      "replicasets",
+      "replicationcontrollers",
+      "secrets",
+      "services",
+      "statefulsets"
+    ]
 
-    rule {
-        api_groups  = [""]
-        resources   = ["nodes"]
-        verbs       = [
-            "get",
-            "list",
-            "watch",
-            "update"
-        ]
-    }
+    verbs = [
+      "create",
+      "get",
+      "watch",
+      "delete",
+      "list",
+      "patch",
+      "update"
+    ]
+  }
+
+  rule {
+    api_groups = [""]
+    resources  = ["nodes"]
+    verbs = [
+      "get",
+      "list",
+      "watch",
+      "update"
+    ]
+  }
 }
 
 /*
@@ -143,37 +143,37 @@ reference a ClusterRole and bind that ClusterRole to the namespace of the RoleBi
 To bind a ClusterRole to all the namespaces in our cluster, we use a ClusterRoleBinding.
 */
 resource "kubernetes_cluster_role_binding" "jenkins_crb" {
-    metadata {
-        name = "jenkins"
-        annotations = {
-            "rbac.authorization.kubernetes.io/autoupdate" = "true"
-        }
-        labels = {
-            "kubernetes.io/bootstrapping" = "rbac-defaults"
-        }
+  metadata {
+    name = "jenkins"
+    annotations = {
+      "rbac.authorization.kubernetes.io/autoupdate" = "true"
     }
+    labels = {
+      "kubernetes.io/bootstrapping" = "rbac-defaults"
+    }
+  }
 
-    role_ref {
-        api_group = "rbac.authorization.k8s.io"
-        kind      = "ClusterRole"
-        name      = "jenkins"
-    }
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = "jenkins"
+  }
 
-    subject {
-        api_group = "rbac.authorization.k8s.io"
-        kind      = "Group"
-        name      = "system:serviceaccounts:jenkins"
-        namespace = "jenkins"
-    }
+  subject {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "Group"
+    name      = "system:serviceaccounts:jenkins"
+    namespace = "jenkins"
+  }
 }
 
 resource "helm_release" "jenkins_helm" {
-    name = "jenkins"
-    chart = "jenkinsci/jenkins"
-    namespace = "jenkins"
-    values = [
-        "${file("jenkins-values.yaml")}"
-    ]
+  name      = "jenkins"
+  chart     = "jenkinsci/jenkins"
+  namespace = "jenkins"
+  values = [
+    "${file("jenkins-values.yaml")}"
+  ]
 
-    depends_on = [kubernetes_cluster_role_binding.jenkins_crb]
+  depends_on = [kubernetes_cluster_role_binding.jenkins_crb]
 }
