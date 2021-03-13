@@ -5,7 +5,7 @@ resource "kubernetes_namespace" "pihole_ns" {
 }
 
 /*
-We want to create a persistent volume for our DNSMasq service. 
+We want to create a persistent volume for our DNSMasq service.
 This will prevent us from losing our whole configuration of the service
 when we reboot our node.
 */
@@ -67,7 +67,7 @@ resource "kubernetes_persistent_volume_claim" "dnsmasq_pvc" {
 }
 
 /*
-We want to create a persistent volume for our PiHole service. 
+We want to create a persistent volume for our PiHole service.
 This will prevent us from losing our whole configuration of the service
 when we reboot our node.
 */
@@ -140,4 +140,4 @@ resource "helm_release" "pihole_helm" {
     "${file("pihole-values.yml")}"
   ]
 
-} 
+}

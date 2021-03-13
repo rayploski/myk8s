@@ -18,7 +18,7 @@ server:
       }
 
     resources:
-      requests: 
+      requests:
         memory: '1Gi'
       limits:
         memory: '1Gi'
@@ -67,4 +67,3 @@ ui:
   annotations: {
     metallb.universe.tf/address-pool: address-pool-1
   }
-

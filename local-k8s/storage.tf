@@ -1,6 +1,6 @@
 /*
-We want to create a persistent volume for our Jenkins controller pod. 
-This will prevent us from losing our whole configuration of the Jenkins controller 
+We want to create a persistent volume for our Jenkins controller pod.
+This will prevent us from losing our whole configuration of the Jenkins controller
 and our jobs when we reboot our node.
 */
 resource "kubernetes_persistent_volume" "local_pv" {

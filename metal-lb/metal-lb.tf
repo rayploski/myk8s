@@ -20,9 +20,9 @@ resource "kubernetes_pod_security_policy" "controller" {
     allow_privilege_escalation = false
     #        allowed_capabilities =  []
     #        allowed_flex_volumes =   []
-    #       allowed_host_paths = 
-    #        allowed_proc_mount_types = 
-    #        allowed_unsafe_sysctls = 
+    #       allowed_host_paths =
+    #        allowed_proc_mount_types =
+    #        allowed_unsafe_sysctls =
     #        default_add_capabilities = []
     default_allow_privilege_escalation = false
     #        forbidden_sysctls =
@@ -36,7 +36,7 @@ resource "kubernetes_pod_security_policy" "controller" {
     host_ipc     = false
     host_network = false
     host_pid     = false
-    #        host_ports = 
+    #        host_ports =
     privileged                 = false
     read_only_root_filesystem  = true
     required_drop_capabilities = ["ALL"]
@@ -47,7 +47,7 @@ resource "kubernetes_pod_security_policy" "controller" {
         max = 65535
       }
     }
-    #        run_as_group = 
+    #        run_as_group =
     se_linux {
       rule = "RunAsAny"
     }

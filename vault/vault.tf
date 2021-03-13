@@ -86,11 +86,11 @@ resource "kubernetes_persistent_volume" "vault_audit_pv" {
 
 }
 
-/* To install vault you will need add the HashiCorp vault repo 
-* 
+/* To install vault you will need add the HashiCorp vault repo
+*
 * helm repo add hashicorp https://helm.releases.hashicorp.com
 * helm repo update
-* helm search repo vault --versions 
+* helm search repo vault --versions
 */
 resource "helm_release" "vault_consul_helm" {
   name      = "consul"
@@ -103,11 +103,11 @@ resource "helm_release" "vault_consul_helm" {
 }
 
 
-/* To install vault you will need add the HashiCorp vault repo 
-* 
+/* To install vault you will need add the HashiCorp vault repo
+*
 * helm repo add hashicorp https://helm.releases.hashicorp.com
 * helm repo update
-* helm search repo vault --versions 
+* helm search repo vault --versions
 */
 
 resource "helm_release" "vault_helm" {
@@ -119,4 +119,3 @@ resource "helm_release" "vault_helm" {
   ]
   depends_on = [helm_release.vault_consul_helm, ]
 }
-

@@ -114,7 +114,7 @@ controller:
   # Put labels on Jenkins controller pod
   podLabels: {}
   # Used to create Ingress record (should used with ServiceType: ClusterIP)
-  nodePort: 32000 
+  nodePort: 32000
     #<to set explicitly, choose port between 30000-32767
   # Enable Kubernetes Liveness and Readiness Probes
   # if Startup Probe is supported, enable it too
@@ -668,7 +668,7 @@ persistence:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  storageClass: 
+  storageClass:
   annotations: {}
   accessMode: "ReadWriteOnce"
   size: "24Gi"

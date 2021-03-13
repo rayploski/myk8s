@@ -17,7 +17,7 @@ service:
   annotations: {
     metallb.universe.tf/address-pool: address-pool-1
   }
-  # loadBalancerIP: 
+  # loadBalancerIP:
   # loadBalancerSourceRanges: []
 
 ingress:

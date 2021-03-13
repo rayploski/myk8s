@@ -30,4 +30,3 @@ resource "kubernetes_namespace" "development" {
     name = "development"
   }
 }
-

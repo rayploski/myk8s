@@ -5,8 +5,8 @@ resource "kubernetes_namespace" "jenkins" {
 }
 
 /*
-We want to create a persistent volume for our Jenkins controller pod. 
-This will prevent us from losing our whole configuration of the Jenkins controller 
+We want to create a persistent volume for our Jenkins controller pod.
+This will prevent us from losing our whole configuration of the Jenkins controller
 and our jobs when we reboot our node.
 */
 resource "kubernetes_persistent_volume" "jenkins_pv" {
@@ -134,12 +134,12 @@ resource "kubernetes_cluster_role" "jenkins_cr" {
 }
 
 /*
-A role binding grants the permissions defined in a role to a user or set of users. 
-It holds a list of subjects (users, groups, or service accounts), and a reference to the role 
+A role binding grants the permissions defined in a role to a user or set of users.
+It holds a list of subjects (users, groups, or service accounts), and a reference to the role
 being granted.
 
-A RoleBinding may reference any Role in the same namespace. Alternatively, a RoleBinding can 
-reference a ClusterRole and bind that ClusterRole to the namespace of the RoleBinding. 
+A RoleBinding may reference any Role in the same namespace. Alternatively, a RoleBinding can
+reference a ClusterRole and bind that ClusterRole to the namespace of the RoleBinding.
 To bind a ClusterRole to all the namespaces in our cluster, we use a ClusterRoleBinding.
 */
 resource "kubernetes_cluster_role_binding" "jenkins_crb" {

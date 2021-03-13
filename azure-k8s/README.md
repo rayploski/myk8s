@@ -5,7 +5,7 @@ This repo provides a way to provision an Azure Kubernetes Service (AKS) via Hash
 ## Create an Active Directory service principal account
 There are many ways to authenticate to the Azure provider. In this tutorial, you will use an Active Directory service principal account. You can learn how to authenticate using a different method [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs#authenticating-to-azure).
 
-First, you need to create an Active Directory service principal account using the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli). 
+First, you need to create an Active Directory service principal account using the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli).
 
 You should see something like the following:
 
