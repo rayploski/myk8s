@@ -1,11 +1,11 @@
 resource "kubernetes_config_map" "metallb_ippool" {
-  metadata { 
-    name = "config"
+  metadata {
+    name      = "config"
     namespace = "metallb-system"
   }
 
   data = {
-      config = <<EOF
+    config = <<EOF
 ---
 address-pools:
 - name: address-pool-1
