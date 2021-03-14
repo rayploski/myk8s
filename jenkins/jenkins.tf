@@ -167,13 +167,45 @@ resource "kubernetes_cluster_role_binding" "jenkins_crb" {
   }
 }
 
+# helm repo add jenkinsci https://charts.jenkins.io
+# helm repo update
 resource "helm_release" "jenkins_helm" {
   name      = "jenkins"
   chart     = "jenkinsci/jenkins"
   namespace = "jenkins"
   values = [
-    "${file("jenkins-values.yaml")}"
+    "${file("./jenkins/jenkins-values.yaml")}"
   ]
 
   depends_on = [kubernetes_cluster_role_binding.jenkins_crb]
 }
+
+/*
+Release "jenkins" has been upgraded. Happy Helming!
+NAME: jenkins
+LAST DEPLOYED: Sun Mar 14 09:53:38 2021
+NAMESPACE: jenkins
+STATUS: deployed
+REVISION: 2
+NOTES:
+1. Get your 'admin' user password by running:
+  kubectl exec --namespace jenkins -it svc/jenkins -c jenkins -- /bin/cat /run/secrets/chart-admin-password && echo
+2. Get the Jenkins URL to visit by running these commands in the same shell:
+  NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+        You can watch the status of by running 'kubectl get svc --namespace jenkins -w jenkins'
+  export SERVICE_IP=$(kubectl get svc --namespace jenkins jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+  echo http://$SERVICE_IP:80/login
+
+3. Login with the password from step 1 and the username: admin
+4. Configure security realm and authorization strategy
+5. Use Jenkins Configuration as Code by specifying configScripts in your values.yaml file, see documentation: http:///configuration-as-code and examples: https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos
+
+For more information on running Jenkins on Kubernetes, visit:
+https://cloud.google.com/solutions/jenkins-on-container-engine
+
+For more information about Jenkins Configuration as Code, visit:
+https://jenkins.io/projects/jcasc/
+
+
+NOTE: Consider using a custom image with pre-installed plugins
+*/
