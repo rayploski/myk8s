@@ -39,6 +39,13 @@ module "pihole" {
 module "jenkins" {
   source = "./jenkins"
   depends_on = [
+    module.metallb_ippool, module.pihole
+  ]
+}
+
+module "vault" {
+  source = "./vault"
+  depends_on = [
     module.metallb_ippool
   ]
 }

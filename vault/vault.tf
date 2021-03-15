@@ -1,14 +1,3 @@
-provider "kubernetes" {
-  config_path    = "~/.kube/config"
-  config_context = "home-k8s"
-}
-
-provider "helm" {
-  kubernetes {
-    config_path = "~/.kube/config"
-  }
-}
-
 resource "kubernetes_namespace" "vault" {
   metadata {
     name = "vault"
@@ -97,7 +86,7 @@ resource "helm_release" "vault_consul_helm" {
   chart     = "hashicorp/consul"
   namespace = "vault"
   values = [
-    "${file("consul-values.yaml")}"
+    "${file("./vault/consul-values.yaml")}"
   ]
 
 }
@@ -115,7 +104,7 @@ resource "helm_release" "vault_helm" {
   chart     = "hashicorp/vault"
   namespace = "vault"
   values = [
-    "${file("vault-values.yaml")}"
+    "${file("./vault/vault-values.yaml")}"
   ]
   depends_on = [helm_release.vault_consul_helm, ]
 }
