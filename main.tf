@@ -49,3 +49,12 @@ module "vault" {
     module.metallb_ippool
   ]
 }
+
+/*
+module "consul"{
+  source = "./consul"
+  depends_on = [
+    module.metallb_ippool
+  ]
+}
+*/

@@ -28,3 +28,10 @@ server:
     maxUnavailable: 0
   storage: 10Gi
   storageClass: vault-storage
+
+ui:
+  enabled: true
+  service:
+    type: LoadBalancer
+    annotations: |
+      metallb.universe.tf/address-pool: address-pool-1
