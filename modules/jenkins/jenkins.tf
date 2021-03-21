@@ -44,7 +44,7 @@ resource "kubernetes_persistent_volume" "jenkins_pv" {
 resource "kubernetes_persistent_volume_claim" "jenkins_pvc" {
   metadata {
     name      = "jenkins-pvc"
-    namespace = "jenkins"
+    namespace = "${kubernetes_namespace.jenkins.metadata.0.name}"
     labels = {
       type = "local"
     }
@@ -64,7 +64,7 @@ resource "kubernetes_persistent_volume_claim" "jenkins_pvc" {
 resource "kubernetes_service_account" "jenkins_sa" {
   metadata {
     name      = "jenkins"
-    namespace = "jenkins"
+    namespace = "${kubernetes_namespace.jenkins.metadata.0.name}"
   }
 }
 
@@ -163,7 +163,7 @@ resource "kubernetes_cluster_role_binding" "jenkins_crb" {
     api_group = "rbac.authorization.k8s.io"
     kind      = "Group"
     name      = "system:serviceaccounts:jenkins"
-    namespace = "jenkins"
+    namespace = "${kubernetes_namespace.jenkins.metadata.0.name}"
   }
 }
 
@@ -172,9 +172,9 @@ resource "kubernetes_cluster_role_binding" "jenkins_crb" {
 resource "helm_release" "jenkins_helm" {
   name      = "jenkins"
   chart     = "jenkinsci/jenkins"
-  namespace = "jenkins"
+  namespace = "${kubernetes_namespace.jenkins.metadata.0.name}"
   values = [
-    "${file("./jenkins/jenkins-values.yaml")}"
+    "${file("../modules/jenkins/jenkins-values.yaml")}"
   ]
 
   depends_on = [kubernetes_cluster_role_binding.jenkins_crb]
