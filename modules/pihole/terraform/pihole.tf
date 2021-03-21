@@ -134,10 +134,10 @@ resource "kubernetes_persistent_volume_claim" "pihole_pvc" {
 
 resource "helm_release" "pihole_helm" {
   name      = "pihole"
-  chart     = "./pihole/helm/"
+  chart     = "../modules/pihole/helm/"
   namespace = "pihole"
   values = [
-    "${file("pihole/terraform/pihole-values.yml")}"
+    "${file("../modules/pihole/terraform/pihole-values.yml")}"
   ]
 
 }
