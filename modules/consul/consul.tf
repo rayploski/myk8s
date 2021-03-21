@@ -1,12 +1,12 @@
-resource "kubernetes_namespace" "vault" {
+resource "kubernetes_namespace" "consul" {
   metadata {
-    name = "vault"
+    name = "consul"
   }
 }
 
-resource "kubernetes_storage_class" "vault_storage" {
+resource "kubernetes_storage_class" "consul_storage" {
   metadata {
-    name = "vault-storage"
+    name = "consul-storage"
   }
   storage_provisioner = "kubernetes.io/no-provisioner"
   reclaim_policy      = "Retain"
@@ -14,19 +14,19 @@ resource "kubernetes_storage_class" "vault_storage" {
 }
 
 
-resource "kubernetes_persistent_volume" "vault_data_pv" {
+resource "kubernetes_persistent_volume" "consul_data_pv" {
   metadata {
-    name = "data-vault"
+    name = "consul-data"
   }
   spec {
     capacity = {
       storage = "10Gi"
     }
     access_modes       = ["ReadWriteOnce"]
-    storage_class_name = "vault-storage"
+    storage_class_name = "consul-storage"
     persistent_volume_source {
       local {
-        path = "/data/k8s-pv/vault/data"
+        path = "/data/k8s-pv/consul/data"
       }
     }
     node_affinity {
@@ -45,19 +45,19 @@ resource "kubernetes_persistent_volume" "vault_data_pv" {
 }
 
 
-resource "kubernetes_persistent_volume" "vault_audit_pv" {
+resource "kubernetes_persistent_volume" "consul_audit_pv" {
   metadata {
-    name = "data-audit"
+    name = "consul-audit"
   }
   spec {
     capacity = {
       storage = "10Gi"
     }
     access_modes       = ["ReadWriteOnce"]
-    storage_class_name = "vault-storage"
+    storage_class_name = "consul-storage"
     persistent_volume_source {
       local {
-        path = "/data/k8s-pv/vault/audit"
+        path = "/data/k8s-pv/consul/audit"
       }
     }
     node_affinity {
@@ -75,36 +75,18 @@ resource "kubernetes_persistent_volume" "vault_audit_pv" {
 
 }
 
-/* To install vault you will need add the HashiCorp vault repo
+/* To install consul you will need add the HashiCorp consul repo
 *
 * helm repo add hashicorp https://helm.releases.hashicorp.com
 * helm repo update
-* helm search repo vault --versions
+* helm search repo consul --versions
 */
-resource "helm_release" "vault_consul_helm" {
+resource "helm_release" "consul_consul_helm" {
   name      = "consul"
   chart     = "hashicorp/consul"
-  namespace = "vault"
+  namespace = "consul"
   values = [
-    "${file("./vault/consul-values.yaml")}"
+    "${file("./consul/consul-values.yaml")}"
   ]
 
-}
-
-
-/* To install vault you will need add the HashiCorp vault repo
-*
-* helm repo add hashicorp https://helm.releases.hashicorp.com
-* helm repo update
-* helm search repo vault --versions
-*/
-
-resource "helm_release" "vault_helm" {
-  name      = "vault"
-  chart     = "hashicorp/vault"
-  namespace = "vault"
-  values = [
-    "${file("./vault/vault-values.yaml")}"
-  ]
-  depends_on = [helm_release.vault_consul_helm, ]
 }
