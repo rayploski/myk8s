@@ -83,7 +83,7 @@ resource "kubernetes_persistent_volume" "consul_audit_pv" {
 */
 resource "helm_release" "consul_consul_helm" {
   name      = "consul"
-  chart     = "hashicorp/consul"
+  chart     = "consul"
   repository = "https://helm.releases.hashicorp.com"
   namespace = "consul"
   values = [
