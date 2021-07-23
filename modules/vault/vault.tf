@@ -84,6 +84,7 @@ resource "kubernetes_persistent_volume" "vault_audit_pv" {
 resource "helm_release" "vault_consul_helm" {
   name      = "consul"
   chart     = "hashicorp/consul"
+  repository = "https://helm.releases.hashicorp.com"
   namespace = "vault"
   values = [
     "${file("../modules/vault/consul-values.yaml")}"
